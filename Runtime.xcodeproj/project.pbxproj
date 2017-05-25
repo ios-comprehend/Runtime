@@ -13,6 +13,7 @@
 		4F1981501ED6BFB6007994A4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F19814E1ED6BFB6007994A4 /* Main.storyboard */; };
 		4F1981521ED6BFB6007994A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F1981511ED6BFB6007994A4 /* Assets.xcassets */; };
 		4F1981551ED6BFB6007994A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F1981531ED6BFB6007994A4 /* LaunchScreen.storyboard */; };
+		4F19815E1ED6CE9B007994A4 /* MessageSendObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F19815D1ED6CE9B007994A4 /* MessageSendObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		4F1981511ED6BFB6007994A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4F1981541ED6BFB6007994A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4F1981561ED6BFB6007994A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4F19815C1ED6CE9B007994A4 /* MessageSendObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSendObject.h; sourceTree = "<group>"; };
+		4F19815D1ED6CE9B007994A4 /* MessageSendObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageSendObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +65,8 @@
 				4F1981491ED6BFB6007994A4 /* AppDelegate.m */,
 				4F19814B1ED6BFB6007994A4 /* ViewController.h */,
 				4F19814C1ED6BFB6007994A4 /* ViewController.m */,
+				4F19815C1ED6CE9B007994A4 /* MessageSendObject.h */,
+				4F19815D1ED6CE9B007994A4 /* MessageSendObject.m */,
 				4F19814E1ED6BFB6007994A4 /* Main.storyboard */,
 				4F1981511ED6BFB6007994A4 /* Assets.xcassets */,
 				4F1981531ED6BFB6007994A4 /* LaunchScreen.storyboard */,
@@ -151,6 +156,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F19815E1ED6CE9B007994A4 /* MessageSendObject.m in Sources */,
 				4F19814D1ED6BFB6007994A4 /* ViewController.m in Sources */,
 				4F19814A1ED6BFB6007994A4 /* AppDelegate.m in Sources */,
 				4F1981471ED6BFB6007994A4 /* main.m in Sources */,
