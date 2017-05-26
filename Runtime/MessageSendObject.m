@@ -9,6 +9,9 @@
 #import "MessageSendObject.h"
 
 @interface MessageSendObject ()
+{
+    NSString *_realName;
+}
 
 @property (strong, nonatomic) NSString *boyName;
 
@@ -23,6 +26,7 @@
     if (self) {
         self.girlName = @"Norma";
         self.boyName = @"Gavin";
+        _realName = @"Kai";
     }
     return self;
 }

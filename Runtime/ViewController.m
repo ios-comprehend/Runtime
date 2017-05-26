@@ -9,8 +9,16 @@
 #import "ViewController.h"
 #import <objc/runtime.h>
 #import "MessageSendObject.h"
+#import "MessageChildObject.h"
 
 @interface ViewController ()
+
++ (void)learnClass:(NSString *) string;
+- (void)goToSchool:(NSString *) name;
+
+-(void)goHome:(NSString *) name;
+
+-(void)negotiate:(NSString *) name;
 
 @end
 
@@ -21,6 +29,9 @@
     [super viewDidLoad];
     MessageSendObject *sendObject = [[MessageSendObject alloc] init];
     NSLog(@"name:%@", sendObject.dynamicName);
+    
+    MessageChildObject *childeObject = [[MessageChildObject alloc]init];
+    NSLog(@"child description:%@", [childeObject description]);
     
     void (*setter)(id, SEL, BOOL);
     int j;
@@ -48,6 +59,12 @@
     
     NSString *key = [self nameWithInstance:sendObject value:@"Gavin"];
     NSLog(@"key %@", key);
+    
+    //dynamic method
+    [ViewController learnClass:@"gavinClass"];
+    [self goToSchool:@"norma"];
+    [self goHome:@"wind"];
+    [self negotiate:@"negotiate"];
 }
 
 //property name with value
@@ -64,7 +81,8 @@
         {
             continue;
         }
-        if ((object_getIvar(instance, thisIvar) == value)) {//此处若 crash 不要慌！
+        if ((object_getIvar(instance, thisIvar) == value))
+        {
             key = [NSString stringWithUTF8String:ivar_getName(thisIvar)];
             break;
         }
@@ -73,5 +91,104 @@
     return key;
 }
 
++ (BOOL)resolveClassMethod:(SEL)sel
+{
+    if (sel == @selector(learnClass:)) {
+        class_addMethod(object_getClass(self), sel, class_getMethodImplementation(object_getClass(self), @selector(myClassMethod:)), "v@:");
+        return YES;
+    }
+    return [class_getSuperclass(self) resolveClassMethod:sel];
+}
+
++ (BOOL)resolveInstanceMethod:(SEL)aSEL
+{
+    if (aSEL == @selector(goToSchool:))
+    {
+        class_addMethod([self class], aSEL, class_getMethodImplementation([self class], @selector(myInstanceMethod:)), "v@:");
+        return YES;
+    }
+    return [super resolveInstanceMethod:aSEL];
+}
+
++ (void)myClassMethod:(NSString *)string
+{
+    NSLog(@"myClassMethod = %@", string);
+}
+
+- (void)myInstanceMethod:(NSString *)string
+{
+    NSLog(@"myInstanceMethod = %@", string);
+}
+
+- (id)forwardingTargetForSelector:(SEL)aSelector
+{
+    if(aSelector == @selector(goHome:))
+    {
+        MessageChildObject *childeObject = [[MessageChildObject alloc]init];
+        return childeObject;
+    }
+    return [super forwardingTargetForSelector:aSelector];
+}
+
+- (void)forwardInvocation:(NSInvocation *)anInvocation
+{
+    MessageChildObject *childeObject = [[MessageChildObject alloc]init];
+    if ([childeObject respondsToSelector:
+         [anInvocation selector]])
+        [anInvocation invokeWithTarget:childeObject];
+    else
+        [super forwardInvocation:anInvocation];
+}
+
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector
+{
+    NSMethodSignature* signature = [super methodSignatureForSelector:selector];
+    if (!signature) {
+        MessageChildObject *childeObject = [[MessageChildObject alloc]init];
+        signature = [childeObject methodSignatureForSelector:selector];
+    }
+    return signature;
+}
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class aClass = [self class];
+        
+        SEL originalSelector = @selector(viewWillAppear:);
+        SEL swizzledSelector = @selector(xxx_viewWillAppear:);
+        
+        Method originalMethod = class_getInstanceMethod(aClass, originalSelector);
+        Method swizzledMethod = class_getInstanceMethod(aClass, swizzledSelector);
+        
+        // When swizzling a class method, use the following:
+        // Class aClass = object_getClass((id)self);
+        // ...
+        // Method originalMethod = class_getClassMethod(aClass, originalSelector);
+        // Method swizzledMethod = class_getClassMethod(aClass, swizzledSelector);
+        
+        BOOL didAddMethod =
+        class_addMethod(aClass,
+                        originalSelector,
+                        method_getImplementation(swizzledMethod),
+                        method_getTypeEncoding(swizzledMethod));
+        
+        if (didAddMethod) {
+            class_replaceMethod(aClass,
+                                swizzledSelector,
+                                method_getImplementation(originalMethod),
+                                method_getTypeEncoding(originalMethod));
+        } else {
+            method_exchangeImplementations(originalMethod, swizzledMethod);
+        }
+    });
+}
+
+#pragma mark - Method Swizzling
+
+- (void)xxx_viewWillAppear:(BOOL)animated {
+    [self xxx_viewWillAppear:animated]; 
+    NSLog(@"viewWillAppear: %@", self); 
+}
 
 @end
